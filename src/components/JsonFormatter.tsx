@@ -157,10 +157,10 @@ const JsonFormatter: React.FC = () => {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <div className="bg-primary text-primary-foreground">
+      <div className="bg-gradient-to-r from-card to-accent border-b border-border">
         <div className="container mx-auto px-6 py-8">
-          <h1 className="text-3xl font-bold mb-2">JSON Formatter & Validator</h1>
-          <p className="text-primary-foreground/80">Format, validate, and debug your JSON with real-time error detection</p>
+          <h1 className="text-3xl font-bold mb-2 text-foreground">JSON Formatter & Validator</h1>
+          <p className="text-muted-foreground">Format, validate, and debug your JSON with real-time error detection</p>
         </div>
       </div>
 
