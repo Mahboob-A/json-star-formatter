@@ -16,6 +16,8 @@ interface JsonError {
 const JsonFormatter: React.FC = () => {
   const [inputJson, setInputJson] = useState('');
   const [formattedJson, setFormattedJson] = useState('');
+  const [minifiedJson, setMinifiedJson] = useState('');
+  const [outputMode, setOutputMode] = useState<'formatted' | 'minified'>('formatted');
   const [isValid, setIsValid] = useState<boolean | null>(null);
   const [errors, setErrors] = useState<JsonError[]>([]);
   const { toast } = useToast();
@@ -107,26 +109,32 @@ const JsonFormatter: React.FC = () => {
         try {
           const parsed = JSON.parse(value);
           const formatted = JSON.stringify(parsed, null, 2);
+          const minified = JSON.stringify(parsed);
           setFormattedJson(formatted);
+          setMinifiedJson(minified);
         } catch (error) {
           setFormattedJson('');
+          setMinifiedJson('');
         }
       } else {
         setFormattedJson('');
+        setMinifiedJson('');
       }
     } else {
       setFormattedJson('');
+      setMinifiedJson('');
       setIsValid(null);
       setErrors([]);
     }
   };
 
   const copyToClipboard = async () => {
-    if (formattedJson) {
-      await navigator.clipboard.writeText(formattedJson);
+    const textToCopy = outputMode === 'formatted' ? formattedJson : minifiedJson;
+    if (textToCopy) {
+      await navigator.clipboard.writeText(textToCopy);
       toast({
         title: "Copied!",
-        description: "Formatted JSON copied to clipboard",
+        description: `${outputMode === 'formatted' ? 'Formatted' : 'Minified'} JSON copied to clipboard`,
       });
     }
   };
@@ -134,8 +142,10 @@ const JsonFormatter: React.FC = () => {
   const clearAll = () => {
     setInputJson('');
     setFormattedJson('');
+    setMinifiedJson('');
     setIsValid(null);
     setErrors([]);
+    setOutputMode('formatted');
   };
 
   const loadExample = () => {
@@ -240,15 +250,37 @@ const JsonFormatter: React.FC = () => {
           {/* Output Section */}
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <h2 className="text-xl font-semibold">Formatted JSON</h2>
-              {formattedJson && (
+              <div className="flex items-center gap-4">
+                <h2 className="text-xl font-semibold">Output</h2>
+                {(formattedJson || minifiedJson) && (
+                  <div className="flex gap-1 bg-muted rounded-lg p-1">
+                    <Button
+                      variant={outputMode === 'formatted' ? 'secondary' : 'ghost'}
+                      size="sm"
+                      onClick={() => setOutputMode('formatted')}
+                      className="h-8 px-3 text-xs"
+                    >
+                      Formatted
+                    </Button>
+                    <Button
+                      variant={outputMode === 'minified' ? 'secondary' : 'ghost'}
+                      size="sm"
+                      onClick={() => setOutputMode('minified')}
+                      className="h-8 px-3 text-xs"
+                    >
+                      Minified
+                    </Button>
+                  </div>
+                )}
+              </div>
+              {(formattedJson || minifiedJson) && (
                 <Button 
                   variant="outline" 
                   size="sm" 
                   onClick={copyToClipboard}
                 >
                   <Copy className="w-4 h-4 mr-1" />
-                  Copy
+                  Copy {outputMode === 'formatted' ? 'Formatted' : 'Minified'}
                 </Button>
               )}
             </div>
@@ -256,11 +288,17 @@ const JsonFormatter: React.FC = () => {
             <Card>
               <div className="relative">
                 <pre className="w-full h-64 p-4 font-mono text-sm bg-input overflow-auto rounded-lg">
-                  {formattedJson || (
-                    <span className="text-muted-foreground">
-                      {inputJson.trim() ? 'Invalid JSON - check errors above' : 'Formatted JSON will appear here...'}
-                    </span>
-                  )}
+                  {(() => {
+                    const currentOutput = outputMode === 'formatted' ? formattedJson : minifiedJson;
+                    if (currentOutput) {
+                      return currentOutput;
+                    }
+                    return (
+                      <span className="text-muted-foreground">
+                        {inputJson.trim() ? 'Invalid JSON - check errors above' : `${outputMode === 'formatted' ? 'Formatted' : 'Minified'} JSON will appear here...`}
+                      </span>
+                    );
+                  })()}
                 </pre>
               </div>
             </Card>
