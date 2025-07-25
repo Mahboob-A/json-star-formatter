@@ -165,7 +165,7 @@ const JsonFormatter: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background flex flex-col">
       {/* Header */}
       <div className="bg-gradient-to-r from-card to-accent border-b border-border">
         <div className="container mx-auto px-6 py-8">
@@ -174,10 +174,10 @@ const JsonFormatter: React.FC = () => {
         </div>
       </div>
 
-      <div className="container mx-auto px-6 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className="container mx-auto px-6 py-8 flex-1">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 h-full">
           {/* Input Section */}
-          <div className="space-y-4">
+          <div className="space-y-4 flex flex-col">
             <div className="flex items-center justify-between">
               <h2 className="text-xl font-semibold">Input JSON</h2>
               <div className="flex gap-2">
@@ -199,12 +199,12 @@ const JsonFormatter: React.FC = () => {
               </div>
             </div>
 
-            <Card className="relative">
+            <Card className="relative flex-1">
               <textarea
                 value={inputJson}
                 onChange={(e) => handleInputChange(e.target.value)}
                 placeholder="Paste your JSON here..."
-                className="w-full h-64 p-4 font-mono text-sm bg-input border-0 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-ring"
+                className="w-full h-full min-h-[500px] p-4 font-mono text-sm bg-input border-0 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-ring"
               />
               
               {/* Status indicator */}
@@ -248,7 +248,7 @@ const JsonFormatter: React.FC = () => {
           </div>
 
           {/* Output Section */}
-          <div className="space-y-4">
+          <div className="space-y-4 flex flex-col">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
                 <h2 className="text-xl font-semibold">Output</h2>
@@ -285,9 +285,9 @@ const JsonFormatter: React.FC = () => {
               )}
             </div>
 
-            <Card>
-              <div className="relative">
-                <pre className="w-full h-64 p-4 font-mono text-sm bg-input overflow-auto rounded-lg">
+            <Card className="flex-1">
+              <div className="relative h-full">
+                <pre className="w-full h-full min-h-[500px] p-4 font-mono text-sm bg-input overflow-auto rounded-lg">
                   {(() => {
                     const currentOutput = outputMode === 'formatted' ? formattedJson : minifiedJson;
                     if (currentOutput) {
@@ -304,9 +304,11 @@ const JsonFormatter: React.FC = () => {
             </Card>
           </div>
         </div>
+      </div>
 
-        {/* Features Section */}
-        <div className="mt-12 text-center">
+      {/* Features Section */}
+      <div className="bg-card/50 border-t border-border">
+        <div className="container mx-auto px-6 py-12 text-center">
           <h3 className="text-lg font-semibold mb-4">Features</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <Card className="p-4">
