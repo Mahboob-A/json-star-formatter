@@ -5,7 +5,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: "greet test"
-                run: echo "Hello, World!"
+              run: echo "Hello, World!"
     
 
 
